@@ -1,0 +1,30 @@
+{
+  "name": "rddiscoverer",
+  "version": "1.0.0",
+  "description": "JSONAPI frontend to RDBMS data",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbones/rddiscoverer.git"
+  },
+  "keywords": [
+    "JSONAPI",
+    "RDBMS",
+    "PG"
+  ],
+  "author": "Valentin Pogrebinsky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bbones/rddiscoverer/issues"
+  },
+  "homepage": "https://github.com/bbones/rddiscoverer#readme",
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "pg": "^7.4.1"
+  }
+}
