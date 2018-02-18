@@ -10,6 +10,7 @@ router.get('/domain/*', ctx => {
 })
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
+router.get('/meta/schemasList/', metaHandler.schemasList)
 
 app
   .use(router.allowedMethods())
