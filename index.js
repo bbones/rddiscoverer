@@ -3,11 +3,9 @@ const Router = require('koa-router')
 const app = new Koa()
 const router = new Router()
 const metaHandler = require('./src/meta-handlers')
+const domainHandler = require('./src/domain-handler')
 
-router.get('/domain/*', ctx => {
-  console.log(ctx)
-  ctx.body = ctx
-})
+router.get('/domain/*', domainHandler.run)
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)
