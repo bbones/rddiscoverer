@@ -1,29 +1,15 @@
 'use strict'
-// const { Client } = require('pg')
-const Url = require('url')
 
-class DomainHandler {
-  decodePathName (str) {
-    return str.split('/')
-  }
+const knex = require('knex')({
+  client: 'pg',
+  connection: process.env.DATABASE_URL
+})
+const pluralize = require('pluralize')
 
-  async run (ctx) {
-    console.log('Domain Router')
-    // const client = new Client(process.env.DATABASE_URL)
-    const myURL = Url.parse(ctx.url)
-    let pathdata = this.decodePathName(myURL.pathname)
-    ctx.body = pathdata
-    // try {
-    //   await client.connect()
-    // } catch (e) {
-    //   console.log('catched', e)
-    //   ctx.body = e
-    // } finally {
-    //   console.log('finally')
-    //   await client.end()
-    // }
-  }
+const domainHandler = async function domainHandler (ctx) {
+  console.log('Domain Router')
+  let pathdata = ctx.params[0].split('/')
+  ctx.body = await knex(pluralize.singular(pathdata[0])).withSchema('keeper').select('*')
 }
 
-const domainHandler = new DomainHandler()
-module.exports = domainHandler.run
+module.exports = domainHandler
