@@ -9,6 +9,7 @@ router.get('/domain/*', domainHandler)
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)
+router.get('/meta/initrepo', metaHandler.initrepo)
 
 app
   .use(router.allowedMethods())

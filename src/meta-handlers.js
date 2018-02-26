@@ -1,5 +1,6 @@
 const { Client } = require('pg')
 const client = new Client(process.env.DATABASE_URL)
+const repository = require('./repository')
 
 class MetaHandler {
   async tablesList (ctx) {
@@ -24,6 +25,12 @@ class MetaHandler {
     } catch (e) {
       ctx.body = e
     }
+  }
+
+  async initrepo (ctx) {
+    console.log('Init repo')
+    await repository.init()
+    ctx.body = 'Success!'
   }
 }
 const metaHandler = new MetaHandler()
