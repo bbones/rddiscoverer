@@ -7,7 +7,10 @@ class Decode {
   }
 }
 
-let decode = new Decode()
-let f = decode.run
-
-f()
+let dec = new Decode()
+dec.run()
+// But
+// let f = dec.run
+// f.apply(dec)
+// f()
+// doesn't work

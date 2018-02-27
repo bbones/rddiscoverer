@@ -11,9 +11,8 @@ class Repository {
   }
 
   async init () {
-    let res = {}
     try {
-      res = await knex.raw(
+      let res = await knex.raw(
         `select tc.table_schema, tc.table_name, kc.column_name
           from
             information_schema.table_constraints tc,
@@ -23,13 +22,12 @@ class Repository {
             and kc.table_name = tc.table_name and kc.table_schema = tc.table_schema
             and kc.constraint_name = tc.constraint_name
           order by 1, 2;`)
-      console.log(res)
+      res.rows.forEach(function (element) {
+        this.dict[element.table_name] = element.column_name
+      }, this)
     } catch (err) {
       console.log(err)
     }
-    res.rows.forEach(function (element) {
-      this.dict[element.table_name] = element.column_name
-    }, this)
   }
 
   async getPKColumn (tabname) {
