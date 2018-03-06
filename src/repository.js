@@ -1,5 +1,7 @@
 'use strict'
 
+const pluralize = require('pluralize')
+
 const knex = require('knex')({
   client: 'pg',
   connection: process.env.DATABASE_URL
@@ -30,12 +32,38 @@ class Repository {
     }
   }
 
-  async getPKColumn (tabname) {
+  getPKColumn (tabname) {
     return this.dict[tabname]
+  }
+
+  async getList (collection) {
+    let res = knex(pluralize.singular(collection))
+      .withSchema('keeper')
+      .select('*')
+    return res
+  }
+
+  async getObject (collection) {
+    let res = knex(pluralize.singular(collection))
+      .withSchema('keeper')
+      .select('*').where(this.getPKColumn(pluralize.singular(collection)), 1)
+    return res
   }
 
   get knex () {
     return knex
+  }
+
+  get dictionary () {
+    return this.dict
+  }
+
+  get query () {
+    let res = {
+      result: []
+    }
+    res.prototype = this.prototype
+    return res
   }
 }
 
