@@ -25,9 +25,10 @@ describe('Repository', () => {
     expect(res[0].object_id).to.equal(1)
   })
 
-  it('#test chain', async function () {
+  it('#test include', async function () {
     expect(repository.query.result.length).to.equal(0)
-    let res = await repository.query.getObject('objects', 2)
+    let res = await repository.getObject('objects', 2,
+      {include: 'object_type'})
     expect(res[0].object_id).to.equal(1)
   })
 })

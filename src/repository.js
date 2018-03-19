@@ -57,14 +57,6 @@ class Repository {
   get dictionary () {
     return this.dict
   }
-
-  get query () {
-    let res = {
-      result: []
-    }
-    res.prototype = this.prototype
-    return res
-  }
 }
 
 const repository = new Repository()
