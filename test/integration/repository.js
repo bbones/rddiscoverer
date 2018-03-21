@@ -9,26 +9,33 @@ describe('Repository', () => {
     await repository.init()
   })
 
-  it('#getPKColumn', async function () {
-    expect(Object.keys(repository.dictionary).length).to.equal(40)
-    let res = await repository.getPKColumn('object')
-    expect(res).to.equal('object_id')
+  describe('* Metadata', () => {
+    it('#getPKColumn', async function () {
+      expect(Object.keys(repository.dictionary).length).to.equal(40)
+      let res = await repository.getPKColumn('object')
+      expect(res).to.equal('object_id')
+    })
   })
 
-  it('#getObjectList', async function () {
-    let res = await repository.getList('objects')
-    expect(res.length).to.equal(22)
+  describe('* getObjectList', () => {
+    it('#getObjectList', async function () {
+      let res = await repository.getList('objects')
+      expect(res.length).to.equal(22)
+    })
   })
 
-  it('#getObject', async function () {
-    let res = await repository.getObject('objects', 2)
-    expect(res[0].object_id).to.equal(1)
-  })
+  describe('* getObject', () => {
+    it('#getObject', async function () {
+      let res = await repository.getObject('objects', 2)
+      expect(res.data[0].object_id).to.equal(2)
+      expect(res.include).to.an('undefined')
+    })
 
-  it('#test include', async function () {
-    expect(repository.query.result.length).to.equal(0)
-    let res = await repository.getObject('objects', 2,
-      {include: 'object_type'})
-    expect(res[0].object_id).to.equal(1)
+    it('#getObject with include many-to-one', async function () {
+      let res = await repository.getObject('objects', 2,
+        {include: 'object_type'})
+      expect(res.data[0].object_id).to.equal(2)
+      expect(res.include).to.an('object')
+    })
   })
 })

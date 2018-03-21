@@ -43,11 +43,14 @@ class Repository {
     return res
   }
 
-  async getObject (collection) {
-    let res = knex(pluralize.singular(collection))
+  async getObject (collection, id, opt) {
+    let res = await knex(pluralize.singular(collection))
       .withSchema('keeper')
-      .select('*').where(this.getPKColumn(pluralize.singular(collection)), 1)
-    return res
+      .select('*').where(this.getPKColumn(pluralize.singular(collection)), id)
+    if (opt && opt.include) {
+      return {data: res, include: {}}
+    }
+    return {data: res}
   }
 
   get knex () {
