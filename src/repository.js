@@ -24,8 +24,11 @@ class Repository {
             and kc.table_name = tc.table_name and kc.table_schema = tc.table_schema
             and kc.constraint_name = tc.constraint_name
           order by 1, 2;`)
-      res.rows.forEach(function (element) {
-        this.dict[element.table_name] = element.column_name
+      res.rows.forEach(async (element) => {
+        this.dict[element.table_name] = {
+          PK: element.column_name,
+          FK: await this.getFKColumns(element.table_name)
+        }
       }, this)
     } catch (err) {
       console.log(err)
@@ -36,6 +39,26 @@ class Repository {
     return this.dict[tabname]
   }
 
+  async getFKColumns (tabname) {
+    try {
+      let res = await knex.raw(`
+        SELECT
+          tc.table_schema, tc.constraint_name, tc.table_name, kcu.column_name,
+          ccu.table_schema AS foreign_table_schema,
+          ccu.table_name AS foreign_table_name,
+          ccu.column_name AS foreign_column_name
+        FROM
+          information_schema.table_constraints AS tc
+          JOIN information_schema.key_column_usage AS kcu
+            ON tc.constraint_name = kcu.constraint_name
+          JOIN information_schema.constraint_column_usage AS ccu
+            ON ccu.constraint_name = tc.constraint_name
+        WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name=?`, [tabname])
+      return res
+    } catch (err) {
+      console.log(err)
+    }
+  }
   async getList (collection) {
     let res = knex(pluralize.singular(collection))
       .withSchema('keeper')
