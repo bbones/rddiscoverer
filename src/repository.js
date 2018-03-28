@@ -9,7 +9,7 @@ const knex = require('knex')({
 
 class Repository {
   constructor () {
-    this.dict = {}
+    this.dict = new Map()
   }
 
   async init () {
@@ -25,10 +25,11 @@ class Repository {
             and kc.constraint_name = tc.constraint_name
           order by 1, 2;`)
       res.rows.forEach(async (element) => {
-        this.dict[element.table_name] = {
+        let fk = await this.getFKColumns(element.table_name)
+        this.dict.set(element.table_name, {
           PK: element.column_name,
-          FK: await this.getFKColumns(element.table_name)
-        }
+          FKs: fk
+        })
       }, this)
     } catch (err) {
       console.log(err)
@@ -36,7 +37,7 @@ class Repository {
   }
 
   getPKColumn (tabname) {
-    return this.dict[tabname]
+    return this.dict.get(tabname).PK
   }
 
   async getFKColumns (tabname) {
@@ -54,7 +55,7 @@ class Repository {
           JOIN information_schema.constraint_column_usage AS ccu
             ON ccu.constraint_name = tc.constraint_name
         WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name=?`, [tabname])
-      return res
+      return res.rows
     } catch (err) {
       console.log(err)
     }

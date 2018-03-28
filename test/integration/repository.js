@@ -11,7 +11,12 @@ describe('Repository', () => {
 
   describe('* Metadata', () => {
     it('Dictionary length test', async function () {
-      expect(Object.keys(repository.dictionary).length).to.equal(40)
+      // console.log(repository.dictionary)
+      expect(repository.dictionary.size).to.equal(40)
+    })
+    it('Dictionary completeness test', async function () {
+      console.log(repository.dictionary.get('bk_entry'))
+      expect(repository.dictionary.get('bk_entry').FKs.length).to.equal(4)
     })
     it('#getPKColumn', async function () {
       let res = await repository.getPKColumn('object')
@@ -19,8 +24,7 @@ describe('Repository', () => {
     })
     it('#getFKColumns', async function () {
       let res = await repository.getFKColumns('bk_entry')
-      // console.log(res.rows)
-      expect(res.rows.length).to.equal(4)
+      expect(res.length).to.equal(4)
     })
   })
 
