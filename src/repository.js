@@ -24,13 +24,13 @@ class Repository {
             and kc.table_name = tc.table_name and kc.table_schema = tc.table_schema
             and kc.constraint_name = tc.constraint_name
           order by 1, 2;`)
-      res.rows.forEach(async (element) => {
-        let fk = await this.getFKColumns(element.table_name)
-        this.dict.set(element.table_name, {
-          PK: element.column_name,
+      for(let entry of res.rows) {
+        let fk = await this.getFKColumns(entry.table_name)
+        this.dict.set(entry.table_name, {
+          PK: entry.column_name,
           FKs: fk
         })
-      }, this)
+      }
     } catch (err) {
       console.log(err)
     }

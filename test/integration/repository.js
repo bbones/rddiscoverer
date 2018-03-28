@@ -15,7 +15,6 @@ describe('Repository', () => {
       expect(repository.dictionary.size).to.equal(40)
     })
     it('Dictionary completeness test', async function () {
-      console.log(repository.dictionary.get('bk_entry'))
       expect(repository.dictionary.get('bk_entry').FKs.length).to.equal(4)
     })
     it('#getPKColumn', async function () {
