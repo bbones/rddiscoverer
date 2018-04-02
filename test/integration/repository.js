@@ -2,7 +2,7 @@
 'use strict'
 var expect = require('chai').expect
 
-const repository = require('../../src/repository')
+const {repository, RelationType} = require('../../src/repository')
 
 describe('Repository', () => {
   before(async function () {
@@ -25,6 +25,10 @@ describe('Repository', () => {
       let res = await repository.getFKColumns('bk_entry')
       expect(res.length).to.equal(4)
     })
+    it('#getRelationType', function () {
+      expect(repository.getRelationType('object', 'object_type_id'))
+        .to.equal(RelationType.MANY_TO_ONE)
+    })
   })
 
   describe('* getObjectList', () => {
@@ -43,7 +47,7 @@ describe('Repository', () => {
 
     it('#getObject with include many-to-one', async function () {
       let res = await repository.getObject('objects', 2,
-        {include: 'object_type'})
+        {include: 'object_type,i18n_data,object_type.i18n_data'})
       expect(res.data[0].object_id).to.equal(2)
       expect(res.include).to.an('object')
     })

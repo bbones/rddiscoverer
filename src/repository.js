@@ -7,6 +7,12 @@ const knex = require('knex')({
   connection: process.env.DATABASE_URL
 })
 
+const RelationType = Object.freeze({
+  ONE_TO_ONE: Symbol('one_to_one'),
+  ONE_TO_MANY: Symbol('one_to_many'),
+  MANY_TO_ONE: Symbol('many_to_one')
+})
+
 class Repository {
   constructor () {
     this.dict = new Map()
@@ -24,7 +30,7 @@ class Repository {
             and kc.table_name = tc.table_name and kc.table_schema = tc.table_schema
             and kc.constraint_name = tc.constraint_name
           order by 1, 2;`)
-      for(let entry of res.rows) {
+      for (let entry of res.rows) {
         let fk = await this.getFKColumns(entry.table_name)
         this.dict.set(entry.table_name, {
           PK: entry.column_name,
@@ -72,6 +78,11 @@ class Repository {
       .withSchema('keeper')
       .select('*').where(this.getPKColumn(pluralize.singular(collection)), id)
     if (opt && opt.include) {
+      if (opt.include) {
+        for (let entity of opt.include.split(',')) {
+          console.log(entity)
+        }
+      }
       return {data: res, include: {}}
     }
     return {data: res}
@@ -84,9 +95,13 @@ class Repository {
   get dictionary () {
     return this.dict
   }
+
+  getRelationType () {
+    return RelationType.MANY_TO_ONE
+  }
 }
 
 const repository = new Repository()
 repository.init()
 
-module.exports = repository
+module.exports = {repository: repository, RelationType: RelationType}
