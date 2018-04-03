@@ -25,9 +25,15 @@ describe('Repository', () => {
       let res = await repository.getFKColumns('bk_entry')
       expect(res.length).to.equal(4)
     })
-    it('#getRelationType', function () {
-      expect(repository.getRelationType('object', 'object_type_id'))
-        .to.equal(RelationType.MANY_TO_ONE)
+    describe('* getRelationType', function () {
+      it('#get MANY_TO_ONE', function () {
+        expect(repository.getRelationType('object', 'object_type_id'))
+          .to.equal(RelationType.MANY_TO_ONE)
+      })
+      it('#get ONE_TO_MANY', function () {
+        expect(repository.getRelationType('object', 'i18n_data'))
+          .to.equal(RelationType.ONE_TO_MANY)
+      })
     })
   })
 

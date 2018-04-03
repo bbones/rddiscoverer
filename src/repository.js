@@ -96,8 +96,13 @@ class Repository {
     return this.dict
   }
 
-  getRelationType () {
-    return RelationType.MANY_TO_ONE
+  getRelationType (entity, included_entity) {
+    // console.log(entity)
+    if (this.dict.get(entity).FKs.indexOf(included_entity) !== -1) {
+      return RelationType.MANY_TO_ONE
+    } else {
+      return RelationType.ONE_TO_MANY
+    }
   }
 }
 
