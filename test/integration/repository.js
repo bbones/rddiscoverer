@@ -1,4 +1,4 @@
-/* global describe, it, before */
+/* global describe, it, before, after */
 'use strict'
 var expect = require('chai').expect
 
@@ -7,6 +7,10 @@ const {repository, RelationType} = require('../../src/repository')
 describe('Repository', () => {
   before(async function () {
     await repository.init()
+  })
+
+  after(async () => {
+    await repository.stop()
   })
 
   describe('* Metadata', () => {
@@ -27,7 +31,7 @@ describe('Repository', () => {
     })
     describe('* getRelationType', function () {
       it('#get MANY_TO_ONE', function () {
-        expect(repository.getRelationType('object', 'object_type_id'))
+        expect(repository.getRelationType('object', 'object_type'))
           .to.equal(RelationType.MANY_TO_ONE)
       })
       it('#get ONE_TO_MANY', function () {
@@ -53,9 +57,17 @@ describe('Repository', () => {
 
     it('#getObject with include many-to-one', async function () {
       let res = await repository.getObject('objects', 2,
-        {include: 'object_type,i18n_data,object_type.i18n_data'})
+        {include: 'object_type,i18n_data'})
       expect(res.data[0].object_id).to.equal(2)
       expect(res.include).to.an('object')
+      expect(res.include.object_type).to.an('array')
+    })
+    it('#getObject with include one-to-many', async function () {
+      let res = await repository.getObject('objects', 2,
+        {include: 'object_type,i18n_data'})
+      expect(res.data[0].object_id).to.equal(2)
+      expect(res.include).to.an('object')
+      expect(res.include.i18n_data).to.an('array')
     })
   })
 })

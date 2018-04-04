@@ -42,6 +42,14 @@ class Repository {
     }
   }
 
+  async stop () {
+    try {
+      await knex.destroy()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   getPKColumn (tabname) {
     return this.dict.get(tabname).PK
   }
@@ -74,18 +82,40 @@ class Repository {
   }
 
   async getObject (collection, id, opt) {
-    let res = await knex(pluralize.singular(collection))
+    // get the main object
+    let table = pluralize.singular(collection)
+    let res = await knex(table)
       .withSchema('keeper')
       .select('*').where(this.getPKColumn(pluralize.singular(collection)), id)
+    let ret = {data: res}
     if (opt && opt.include) {
+      // include  section analysis
       if (opt.include) {
+        ret['include'] = {}
         for (let entity of opt.include.split(',')) {
-          console.log(entity)
+          // if relation is MANY_TO_ONE
+          let ref = this.dict.get(table).FKs.find(fk => {
+            return fk.foreign_table_name === entity
+          })
+          if (ref) {
+            ret.include[entity] = await knex(entity)
+              .where(ref.foreign_column_name, res[0][ref.column_name])
+              .withSchema(ref.foreign_table_schema)
+          } else {
+            // if relation is ONE_TO_MANY
+            let ref = this.dict.get(entity).FKs.find(fk => {
+              return fk.foreign_table_name === table
+            })
+            if (ref) {
+              ret.include[entity] = await knex(entity)
+                .where(ref.column_name, res[0][ref.foreign_column_name])
+                .withSchema(ref.table_schema)
+            }
+          }
         }
       }
-      return {data: res, include: {}}
     }
-    return {data: res}
+    return ret
   }
 
   get knex () {
@@ -96,9 +126,10 @@ class Repository {
     return this.dict
   }
 
-  getRelationType (entity, included_entity) {
-    // console.log(entity)
-    if (this.dict.get(entity).FKs.indexOf(included_entity) !== -1) {
+  getRelationType (entity, includedEntity) {
+    if (this.dict.get(entity).FKs.find(fk => {
+      return fk.foreign_table_name === includedEntity
+    })) {
       return RelationType.MANY_TO_ONE
     } else {
       return RelationType.ONE_TO_MANY
