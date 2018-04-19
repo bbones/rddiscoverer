@@ -62,6 +62,7 @@ describe('Repository', () => {
       expect(res.include).to.an('object')
       expect(res.include.object_type).to.an('array')
     })
+
     it('#getObject with include one-to-many', async function () {
       let res = await repository.getObject('objects', 2,
         {include: 'object_type,i18n_data'})

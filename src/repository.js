@@ -19,6 +19,7 @@ class Repository {
   }
 
   async init () {
+    console.log('Init repo...')
     try {
       let res = await knex.raw(
         `select tc.table_schema, tc.table_name, kc.column_name
@@ -37,6 +38,7 @@ class Repository {
           FKs: fk
         })
       }
+      console.log('Init repo finished')
     } catch (err) {
       console.log(err)
     }
@@ -138,6 +140,6 @@ class Repository {
 }
 
 const repository = new Repository()
-repository.init()
+await repository.init()
 
 module.exports = {repository: repository, RelationType: RelationType}
