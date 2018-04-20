@@ -1,6 +1,6 @@
 'use strict'
 
-const repository = require('./repository')
+const {repository} = require('./repository')
 
 const domainHandler = async function domainHandler (ctx) {
   console.log('Domain Router')

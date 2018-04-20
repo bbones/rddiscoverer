@@ -6,6 +6,9 @@ const app = new Koa()
 const router = new Router()
 const metaHandler = require('./src/meta-handlers')
 const domainHandler = require('./src/domain-handler')
+const {repository} = require('./src/repository')
+
+repository.init()
 
 router.get('/domain/*', domainHandler)
 

@@ -140,6 +140,5 @@ class Repository {
 }
 
 const repository = new Repository()
-await repository.init()
 
 module.exports = {repository: repository, RelationType: RelationType}
