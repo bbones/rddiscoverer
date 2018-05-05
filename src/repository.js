@@ -97,15 +97,15 @@ class Repository {
         for (let entity of opt.include.split(',')) {
           // if relation is MANY_TO_ONE
           let ref = this.dict.get(table).FKs.find(fk => {
-            return fk.foreign_table_name === entity
+            return fk.foreign_table_name === pluralize.singular(entity)
           })
           if (ref) {
-            ret.include[entity] = await knex(entity)
+            ret.include[entity] = await knex(pluralize.singular(entity))
               .where(ref.foreign_column_name, res[0][ref.column_name])
               .withSchema(ref.foreign_table_schema)
           } else {
             // if relation is ONE_TO_MANY
-            let ref = this.dict.get(entity).FKs.find(fk => {
+            let ref = this.dict.get(pluralize.singular(entity)).FKs.find(fk => {
               return fk.foreign_table_name === table
             })
             if (ref) {

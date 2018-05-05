@@ -7,6 +7,10 @@ Request | URL | Description | parameters
 *GET* | /objects | Just list of "objects" |
 *GET* | /objects/2 | "Object" with id=2|
 *GET* | /objects/2?include=i18n_data | "Object" with id=2| ```{ include = [{model : Models.I18nData] } ```
+POST  |   |   |  
+PUT  |   |   |  
+DELETE  |   |   |  
+UPDATE  |   |   |  
 
 # The Plan
 ## Repository
