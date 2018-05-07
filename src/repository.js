@@ -76,11 +76,44 @@ class Repository {
       console.log(err)
     }
   }
-  async getList (collection) {
-    let res = knex(pluralize.singular(collection))
+  async getList (collection, opt) {
+    let table = pluralize.singular(collection)
+    let res = await knex(table)
       .withSchema('keeper')
       .select('*')
-    return res
+    let ret = {data: res}
+    if (opt && opt.include) {
+      // include  section analysis
+      if (opt.include) {
+        ret['include'] = {}
+        for (let entity of opt.include.split(',')) {
+          // if relation is MANY_TO_ONE
+          let ref = this.dict.get(table).FKs.find(fk => {
+            return fk.foreign_table_name === pluralize.singular(entity)
+          })
+          if (ref) {
+            // collect referenced IDs in Set
+            console.log(ref)
+            let ids = new Set(res.map(item => item[ref.column_name]))
+            console.log(ids)
+            ret.include[entity] = await knex(pluralize.singular(entity))
+              .whereIn(ref.foreign_column_name, Array.from(ids))
+              .withSchema(ref.foreign_table_schema)
+          } else {
+            // if relation is ONE_TO_MANY
+            // let ref = this.dict.get(pluralize.singular(entity)).FKs.find(fk => {
+            //   return fk.foreign_table_name === table
+            // })
+            // if (ref) {
+            //   ret.include[entity] = await knex(entity)
+            //     .where(ref.column_name, res[0][ref.foreign_column_name])
+            //     .withSchema(ref.table_schema)
+            // }
+          }
+        }
+      }
+    }
+    return ret
   }
 
   async getObject (collection, id, opt) {
