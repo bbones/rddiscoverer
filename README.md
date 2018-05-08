@@ -12,6 +12,10 @@ PUT  |   |   |
 DELETE  |   |   |  
 UPDATE  |   |   |  
 
+## Naming convention
+URL requests - plural
+table names - singular
+
 # The Plan
 ## Repository
 ### Included objects select strategy
