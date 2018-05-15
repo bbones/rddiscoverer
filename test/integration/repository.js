@@ -44,7 +44,7 @@ describe('Repository', () => {
   describe('* getObjectList', () => {
     it('#getObjectList', async function () {
       let res = await repository.getList('objects')
-      expect(res.length).to.equal(22)
+      expect(res.data.length).to.equal(22)
     })
   })
 
@@ -57,7 +57,7 @@ describe('Repository', () => {
 
     it('#getObject with include many-to-one', async function () {
       let res = await repository.getObject('objects', 2,
-        {include: 'object_type,i18n_data'})
+        {include: 'object_type,i18n_datum'})
       expect(res.data[0].object_id).to.equal(2)
       expect(res.include).to.an('object')
       expect(res.include.object_type).to.an('array')
@@ -65,10 +65,10 @@ describe('Repository', () => {
 
     it('#getObject with include one-to-many', async function () {
       let res = await repository.getObject('objects', 2,
-        {include: 'object_type,i18n_data'})
+        {include: 'object_type,i18n_datum'})
       expect(res.data[0].object_id).to.equal(2)
       expect(res.include).to.an('object')
-      expect(res.include.i18n_data).to.an('array')
+      expect(res.include.i18n_datum).to.an('array')
     })
   })
 })
