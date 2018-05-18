@@ -1,16 +1,18 @@
 'use strict'
 
 const Koa = require('koa')
+const koaBody = require('koa-body')
 const Router = require('koa-router')
 const app = new Koa()
 const router = new Router()
 const metaHandler = require('./src/meta-handlers')
-const domainHandler = require('./src/domain-handler')
+const {getDomainHandler, postDomainHandler} = require('./src/domain-handler')
 const {repository} = require('./src/repository')
 
 repository.init()
 
-router.get('/domain/*', domainHandler)
+router.get('/domain/*', getDomainHandler)
+router.post('/domain/*', postDomainHandler)
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)
@@ -19,7 +21,7 @@ router.get('/meta/initrepo', metaHandler.initrepo)
 app
   .use(router.allowedMethods())
   .use(router.routes())
-  .use(require('koa-body')())
+  .use(koaBody())
 
 app.use(async ctx => {
   ctx.body = 'Hello World'

@@ -2,8 +2,8 @@
 
 const {repository} = require('./repository')
 
-const domainHandler = async function domainHandler (ctx) {
-  console.log('Domain Router')
+exports.getDomainHandler = async function domainHandler (ctx) {
+  console.log('get Domain Router')
   let pathdata = ctx.params[0].split('/')
   let res
   if (pathdata.length === 1) {
@@ -15,4 +15,8 @@ const domainHandler = async function domainHandler (ctx) {
   ctx.body = res
 }
 
-module.exports = domainHandler
+exports.postDomainHandler = async function domainHandler (ctx) {
+  console.log('post Domain Router')
+  let res = `Request Body: ${JSON.stringify(ctx.request.body)}`
+  ctx.body = res
+}
