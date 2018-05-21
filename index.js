@@ -12,7 +12,7 @@ const {repository} = require('./src/repository')
 repository.init()
 
 router.get('/domain/*', getDomainHandler)
-router.post('/domain/*', postDomainHandler)
+router.post('/domain/*', koaBody(), postDomainHandler)
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)

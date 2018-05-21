@@ -153,6 +153,11 @@ class Repository {
     return ret
   }
 
+  async create(obj) {
+    console.log(obj)
+    return JSON.stringify(obj)
+  }
+
   get knex () {
     return knex
   }

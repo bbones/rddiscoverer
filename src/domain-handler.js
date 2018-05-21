@@ -17,6 +17,5 @@ exports.getDomainHandler = async function domainHandler (ctx) {
 
 exports.postDomainHandler = async function domainHandler (ctx) {
   console.log('post Domain Router')
-  let res = `Request Body: ${JSON.stringify(ctx.request.body)}`
-  ctx.body = res
+  ctx.body = repository.create(ctx.request.body)
 }
