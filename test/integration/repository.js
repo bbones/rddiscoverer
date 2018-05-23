@@ -71,4 +71,12 @@ describe('Repository', () => {
       expect(res.include.i18n_datum).to.an('array')
     })
   })
+
+  describe('* postObject', () => {
+    it('postObject', async function () {
+      let res = await repository.create({parent_object_id: 4})
+      expect(res.data).to.an('object')
+      expect(res.data.id).to.a('number')
+    })
+  })
 })
