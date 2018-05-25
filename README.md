@@ -26,3 +26,6 @@ table names - singular
 ## Serializer
 ## Deserializer
 ## App Server
+## Optimistic lock with VERSION field
+WHERE clause with VERSION check
+OptimisticLockError

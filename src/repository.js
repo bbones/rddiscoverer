@@ -153,7 +153,11 @@ class Repository {
     return ret
   }
 
-  async create (obj) {
+  async create (collection, obj) {
+    let table = pluralize.singular(collection)
+    obj.created_at = obj.updated_at = new Date()
+    obj.version = 0
+    obj = await knex(table).insert(obj).returning('*').withSchema('keeper')
     return {data: obj}
   }
 
