@@ -4,7 +4,8 @@ const pluralize = require('pluralize')
 
 const knex = require('knex')({
   client: 'pg',
-  connection: process.env.DATABASE_URL
+  connection: process.env.DATABASE_URL,
+  searchPath: 'keeper'
 })
 
 const RelationType = Object.freeze({
@@ -79,7 +80,7 @@ class Repository {
   async getList (collection, opt) {
     let table = pluralize.singular(collection)
     let res = await knex(table)
-      .withSchema('keeper')
+      // .withSchema('keeper')
       .select('*')
     let ret = {data: res}
     if (opt && opt.include) {
@@ -120,7 +121,6 @@ class Repository {
     // get the main object
     let table = pluralize.singular(collection)
     let res = await knex(table)
-      .withSchema('keeper')
       .select('*').where(this.getPKColumn(pluralize.singular(collection)), id)
     let ret = {data: res}
     if (opt && opt.include) {
@@ -157,7 +157,17 @@ class Repository {
     let table = pluralize.singular(collection)
     obj.created_at = obj.updated_at = new Date()
     obj.version = 0
-    obj = await knex(table).insert(obj).returning('*').withSchema('keeper')
+    obj = await knex(table).insert(obj).returning('*')
+    return {data: obj}
+  }
+
+  async patch (collection, id, version, obj) {
+    let table = pluralize.singular(collection)
+    obj.updated_at = new Date()
+    obj.version++
+    let whereClause = {version: version}
+    whereClause[this.dict.get(table).PK] = id
+    obj = await knex(table).update(obj).where(whereClause)
     return {data: obj}
   }
 

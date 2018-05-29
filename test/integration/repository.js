@@ -44,7 +44,7 @@ describe('Repository', () => {
   describe('* getObjectList', () => {
     it('#getObjectList', async function () {
       let res = await repository.getList('objects')
-      expect(res.data.length).to.equal(22)
+      expect(res.data.length).to.equal(20)
     })
   })
 
