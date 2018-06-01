@@ -1,6 +1,7 @@
 'use strict'
 
 const pluralize = require('pluralize')
+const JSONAPI = require('./jsonapi')
 
 const knex = require('knex')({
   client: 'pg',
@@ -17,6 +18,7 @@ const RelationType = Object.freeze({
 class Repository {
   constructor () {
     this.dict = new Map()
+    this.JSONAPI = new JSONAPI(this.dict)
   }
 
   async init () {
@@ -158,7 +160,7 @@ class Repository {
     obj.created_at = obj.updated_at = new Date()
     obj.version = 0
     obj = await knex(table).insert(obj).returning('*')
-    return {data: obj}
+    return JSONAPI.encode(collection, obj)
   }
 
   async patch (collection, id, version, obj) {
@@ -168,6 +170,14 @@ class Repository {
     let whereClause = {version: version}
     whereClause[this.dict.get(table).PK] = id
     obj = await knex(table).update(obj).where(whereClause)
+    return {data: obj}
+  }
+
+  async delete (collection, id, version) {
+    let table = pluralize.singular(collection)
+    let whereClause = {version: version}
+    whereClause[this.dict.get(table).PK] = id
+    let obj = await knex(table).delete().where(whereClause)
     return {data: obj}
   }
 

@@ -6,8 +6,11 @@ const Router = require('koa-router')
 const app = new Koa()
 const router = new Router()
 const metaHandler = require('./src/meta-handlers')
-const {getDomainHandler, postDomainHandler, patchDomainHandler} =
-  require('./src/domain-handler')
+const {
+  getDomainHandler,
+  postDomainHandler,
+  patchDomainHandler,
+  deleteDomainHandler} = require('./src/domain-handler')
 const {repository} = require('./src/repository')
 
 repository.init()
@@ -15,6 +18,7 @@ repository.init()
 router.get('/domain/*', getDomainHandler)
 router.post('/domain/*', koaBody(), postDomainHandler)
 router.patch('/domain/*', koaBody(), patchDomainHandler)
+router.delete('/domain/*', koaBody(), deleteDomainHandler)
 
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)

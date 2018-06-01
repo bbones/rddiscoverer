@@ -15,7 +15,6 @@ describe('Repository', () => {
 
   describe('* Metadata', () => {
     it('Dictionary length test', async function () {
-      // console.log(repository.dictionary)
       expect(repository.dictionary.size).to.equal(40)
     })
     it('Dictionary completeness test', async function () {
