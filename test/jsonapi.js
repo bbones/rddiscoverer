@@ -38,9 +38,15 @@ describe('JSONAPI', () => {
   it('* encode plain', () => {
     expect(jsna.encode('object', {
       object_id: 11,
-      paretnr_object_id: 4,
+      parent_object_id: 4,
       object_type_id: 10
-    })).to.deep.equal({'type': 'object', 'id': 11})
+    })).to.deep.equal(`{'type': 'object', 'id': 11}`)
   })
-  it('* decode')
+  it('* decode', () => {
+    expect(jsna.decode(`{
+      "id": "3",
+      "parent_object_id": "4",
+      "object_type_id": "10"
+    }`))
+  })
 })

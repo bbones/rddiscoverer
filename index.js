@@ -12,6 +12,7 @@ const {
   patchDomainHandler,
   deleteDomainHandler} = require('./src/domain-handler')
 const {repository} = require('./src/repository')
+const {oauth2Handler} = require('./src/oauth2-handler')
 
 repository.init()
 
@@ -23,6 +24,8 @@ router.delete('/domain/*', koaBody(), deleteDomainHandler)
 router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)
 router.get('/meta/initrepo', metaHandler.initrepo)
+
+router.get('/oauth2', oauth2Handler.getAccessToken)
 
 app
   .use(router.allowedMethods())
