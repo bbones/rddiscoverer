@@ -12,7 +12,8 @@ const {
   patchDomainHandler,
   deleteDomainHandler} = require('./src/domain-handler')
 const {repository} = require('./src/repository')
-const {oauth2Handler} = require('./src/oauth2-handler')
+
+const { getAccessToken } = require('./src/oauth2-handler')
 
 repository.init()
 
@@ -25,7 +26,7 @@ router.get('/meta/tablesList/', metaHandler.tablesList)
 router.get('/meta/schemasList/', metaHandler.schemasList)
 router.get('/meta/initrepo', metaHandler.initrepo)
 
-router.get('/oauth2', oauth2Handler.getAccessToken)
+router.get('/oauth2', getAccessToken)
 
 app
   .use(router.allowedMethods())

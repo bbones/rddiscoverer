@@ -1,7 +1,8 @@
 'use strict'
 
-export default async function (ctx) {
-  console.log('get Domain Router')
+
+exports.getAccessToken = async function (ctx) {
+  console.log('getAccessToken')
   // let code = ctx
-  ctx.body = 'Code'
+  ctx.body = ctx.query
 }
