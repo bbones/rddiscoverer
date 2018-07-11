@@ -18,14 +18,20 @@ exports.getAccessToken = async function (ctx) {
   console.log(result.data)
   const query = qs.parse(result.data)
   console.log(query.access_token)
+  ctx.body = {
+    token: query.access_token
+  }
+}
+
+exports.getUserInfo = async function (ctx) {
+  console.log('getUserInfo')
+  console.log(ctx.headers.authorization)
+  // Redirect to GitHub
   let user = await axios.get(GITHUB_GET_USER_INFO, {
     headers: {
-      Authorization: `token ${query.access_token}`
+      Authorization: `${ctx.headers.authorization}`
     }
   })
   console.log(user.data)
-  ctx.body = {
-    token: query.access_token,
-    user: user.data
-  }
+  ctx.body = user.data
 }

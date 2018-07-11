@@ -13,7 +13,7 @@ const {
   deleteDomainHandler} = require('./src/domain-handler')
 const {repository} = require('./src/repository')
 
-const { getAccessToken } = require('./src/oauth2-handler')
+const { getAccessToken, getUserInfo } = require('./src/oauth2-handler')
 
 repository.init()
 
@@ -27,6 +27,7 @@ router.get('/meta/schemasList/', metaHandler.schemasList)
 router.get('/meta/initrepo', metaHandler.initrepo)
 
 router.get('/oauth2', getAccessToken)
+router.get('/user_info', getUserInfo)
 
 app
   .use(router.allowedMethods())
