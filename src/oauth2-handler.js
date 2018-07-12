@@ -15,7 +15,6 @@ exports.getAccessToken = async function (ctx) {
     client_secret: CLIENT_SECRET,
     code: ctx.query.code
   })
-  console.log(result.data)
   const query = qs.parse(result.data)
   console.log(query.access_token)
   ctx.body = {
@@ -32,6 +31,6 @@ exports.getUserInfo = async function (ctx) {
       Authorization: `${ctx.headers.authorization}`
     }
   })
-  console.log(user.data)
+  console.log(user.data.login)
   ctx.body = user.data
 }
